@@ -34,14 +34,19 @@
 					event.preventDefault();
 					$(this).val(ui.item.label);
 					$("#idFilm").val(ui.item.value);
+					var filmId = $("#idFilm").val();
+					var actorId = $("#idActor").text();
+					$.getJSON("http://localhost:8080/linkActorFilm/"+actorId+"/"+filmId, function(data){
+						if(data == 0) location.href = location.href;
+					});
 				}
 			});
 			$("#link").click(function(){
-				var filmId = $("#idFilm").val();
-				var actorId = $("#idActor").text();
-				$.getJSON("http://localhost:8080/linkActorFilm/"+actorId+"/"+filmId, function(data){
-					if(data == 0) location.href = location.href;
-				});
+// 				var filmId = $("#idFilm").val();
+// 				var actorId = $("#idActor").text();
+// 				$.getJSON("http://localhost:8080/linkActorFilm/"+actorId+"/"+filmId, function(data){
+// 					if(data == 0) location.href = location.href;
+// 				});
 			})
 		});
 	});
