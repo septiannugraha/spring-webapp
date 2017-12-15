@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title th:text="'Actor Detail #' + ${actor.actorId}"></title>
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/jquery-ui-git.css" />
+<script src="http://code.jquery.com/jquery-3.2.1.min.js"
+	integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+	integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+	crossorigin="anonymous"></script>
+<script
+	src="http://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script>
+	$(document).ready(function() {
+		$('#movies').DataTable();
+		$.getJSON("http://localhost:8181/greet/films/", function(data) {
+			var film = [];
+			$.each(data, function(i, row) {
+				// 						film[i] = row.title
+				film[i] = {
+					'value' : row.filmId,
+					'label' : row.title
+				};
+			});
+			//alert(data);
+			console.log(film);
+			$("#filmInput").autocomplete({
+				source : film,
+				select : function(event, ui){
+					event.preventDefault();
+					$(this).val(ui.item.label);
+					$("#idFilm").val(ui.item.value);
+				}
+			});
+			$("#link").click(function(){
+				var filmId = $("#idFilm").val();
+				var actorId = $("#idActor").text();
+				$.getJSON("http://localhost:8080/linkActorFilm/"+actorId+"/"+filmId, function(data){
+					if(data == 0) location.href = location.href;
+				});
+			})
+		});
+	});
+</script>
+</head>
+<body>
+	<table>
+		<tr>
+			<th>First Name:</th>
+			<td th:text="${actor.firstName}"></td>
+		</tr>
+		<tr>
+			<th>Last Name:</th>
+			<td th:text="${actor.lastName}"></td>
+		</tr>
+		<tr>
+			<td><input type="text" id="filmInput" /><input type="hidden"
+				id="idFilm" /><div id="idActor" th:text="${actor.actorId}"></div>
+    </td>
+    <td><input type="button" id="link"
+				value="simpan" /></td>
+		</tr>
+	</table>
+
+	<p>Starred in:</p>
+	<table id="movies">
+		<thead>
+			<th>Title</th>
+			<th>Description</th>
+			<!-- 				<th>Release</th> -->
+			<th></th>
+		</thead>
+		<tbody>
+			<tr th:each="filmActor : ${actor.filmActorList}">
+				<td th:text="${filmActor.film.title}"></td>
+				<td th:text="${filmActor.film.description}"></td>
+				<td><a th:href="@{'/film/detail/'+ ${filmActor.film.filmId}}">
+						Detail</a></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

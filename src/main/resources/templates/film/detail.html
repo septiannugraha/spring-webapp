@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title th:text="'Film Detail #'+ ${film.filmId}"></title>
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+<script src="http://code.jquery.com/jquery-3.2.1.min.js"
+	integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	crossorigin="anonymous"></script>
+<script
+	src="http://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('table').DataTable();
+	});
+</script>
+</head>
+<body>
+	<b>Title: </b><span th:text="${film.title}"></span><br/>
+	<b>Description: </b><span th:text="${film.description}"></span>
+	<p>Cast(s)</p>
+	<table>
+		<thead>
+				<th>First Name</th>
+				<th>Last Name</th>
+<!-- 				<th>Release</th> -->
+				<th> </th>
+		</thead>
+		<tbody>
+			<tr th:each="filmActor : ${film.filmActorList}">
+				<td th:text="${filmActor.actor.firstName}"></td>
+				<td th:text="${filmActor.actor.lastName}"></td>
+<!-- 				<td th:text="${filmActor.film.releaseYear}"></td> -->
+				<td><a th:href="@{'/actor/detail/'+ ${filmActor.actor.actorId}}"> Detail</a></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
